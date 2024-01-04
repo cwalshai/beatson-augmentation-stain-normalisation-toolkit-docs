@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>API &#8212; BEAST - Beatson Augmentation and Stain Normalisation Toolkit  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=4f649999" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=039e1c02" />
+    <script src="_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Welcome to the Beatson Augmentation and Stain Normalisation Toolkit’s documentation." href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="api">
+<h1>API<a class="headerlink" href="#api" title="Link to this heading">¶</a></h1>
+<section id="normalisation-and-augmentation">
+<h2>Normalisation and Augmentation<a class="headerlink" href="#normalisation-and-augmentation" title="Link to this heading">¶</a></h2>
+<dl class="py exception" id="module-beast.reinhard">
+<dt class="sig sig-object py" id="beast.reinhard.ArrayTypeExcpeiton">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">beast.reinhard.</span></span><span class="sig-name descname"><span class="pre">ArrayTypeExcpeiton</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Numpy</span> <span class="pre">array</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">of</span> <span class="pre">type</span> <span class="pre">UInt8.'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#beast.reinhard.ArrayTypeExcpeiton" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Raised when a numpy array is not of type UInt8.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="beast.reinhard.ArrayTypeExcpeiton.args">
+<span class="sig-name descname"><span class="pre">args</span></span><a class="headerlink" href="#beast.reinhard.ArrayTypeExcpeiton.args" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.reinhard.ArrayTypeExcpeiton.with_traceback">
+<span class="sig-name descname"><span class="pre">with_traceback</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#beast.reinhard.ArrayTypeExcpeiton.with_traceback" title="Link to this definition">¶</a></dt>
+<dd><p>Exception.with_traceback(tb) –
+set self.__traceback__ to tb and return self.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="beast.reinhard.ReinhardTileNormaliser">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">beast.reinhard.</span></span><span class="sig-name descname"><span class="pre">ReinhardTileNormaliser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_loader:</span> <span class="pre">~typing.Callable</span> <span class="pre">=</span> <span class="pre">&lt;function</span> <span class="pre">read_tile&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logfile=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">terminal_log_level=10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_log_level=10</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#beast.reinhard.ReinhardTileNormaliser" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseNormaliser</span></code></p>
+<p>Class to transform the colour profile of an image tile to match a target using the Reinhard Colour Transfer Algorithm (<a class="reference external" href="https://www.cs.tau.ac.il/~turkel/imagepapers/ColorTransfer.pdf">https://www.cs.tau.ac.il/~turkel/imagepapers/ColorTransfer.pdf</a>).</p>
+<p>Normalisation is performed by computing the mean and standard deviation of the channels in LAB colour space for the source and target images. The mean and standard deviation of the source image is then scaled to match the target image.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>file_loader (Callable, optional): The function to load the tile. Defaults to read_tile. A function that accepts a path and returns a numpy array can be supplied by the user for custom loading.
+logfile (str, optional): The path to the log file. Defaults to None.
+terminal_log_level (int, optional): The level of logging to the terminal. Defaults to logging.DEBUG.
+file_log_level (int, optional): The level of logging to the file. Defaults to logging.DEBUG.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.reinhard.ReinhardTileNormaliser.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_or_array</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#beast.reinhard.ReinhardTileNormaliser.fit" title="Link to this definition">¶</a></dt>
+<dd><p>Function to fit the normalisation to a target whole slide image.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>path_or_array &lt;str, Path, np.ndarray&gt;: Path to the whole slide image to fit to, or the array to fit to.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.reinhard.ReinhardTileNormaliser.load_fit">
+<span class="sig-name descname"><span class="pre">load_fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#beast.reinhard.ReinhardTileNormaliser.load_fit" title="Link to this definition">¶</a></dt>
+<dd><p>Function to load the target normalisation metadata from a JSON file.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>path &lt;str, Path&gt;: Path to load the JSON file from.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.reinhard.ReinhardTileNormaliser.normalise">
+<span class="sig-name descname"><span class="pre">normalise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_or_array</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#beast.reinhard.ReinhardTileNormaliser.normalise" title="Link to this definition">¶</a></dt>
+<dd><p>Function to normalise a whole slide image using the specified normalisation type.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>path_or_array &lt;str, Path, np.ndarray&gt;: Path to the whole slide image to normalise, or the array to normalise.</p>
+</dd>
+<dt>Returns:</dt><dd><p>np.ndarray: Normalised array.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.reinhard.ReinhardTileNormaliser.save_fit">
+<span class="sig-name descname"><span class="pre">save_fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#beast.reinhard.ReinhardTileNormaliser.save_fit" title="Link to this definition">¶</a></dt>
+<dd><p>Function to save the target normalisation metadata to a JSON file.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>path &lt;str, Path&gt;: Path to save the JSON file to.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="beast.reinhard.ReinhardWSINormaliser">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">beast.reinhard.</span></span><span class="sig-name descname"><span class="pre">ReinhardWSINormaliser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_loader:</span> <span class="pre">~typing.Callable</span> <span class="pre">=</span> <span class="pre">&lt;function</span> <span class="pre">read_wsi&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logfile=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">terminal_log_level=10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_log_level=10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">16</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#beast.reinhard.ReinhardWSINormaliser" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseNormaliser</span></code></p>
+<p>Class to transform the colour profile of a whole slide image to match a target using the Reinhard Colour Transfer Algorithm (<a class="reference external" href="https://www.cs.tau.ac.il/~turkel/imagepapers/ColorTransfer.pdf">https://www.cs.tau.ac.il/~turkel/imagepapers/ColorTransfer.pdf</a>). Warning: This class considers the colour profile of the entire slide when normalising, this is useful for visualisation of the slide but may not be appropriate for analysis when stain intensity can vary across the slide. For analysis, use the ReinhardTileNormaliser or ReinhardWSITesselatedNormaliser class.</p>
+<p>Normalistion is carried out by standardising the luminosity of the source image, then calculating the mean and standard deviation of the channels in the LAB colour space. These channels are then scaled across the whole slide to match a target colour profile.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>file_loader (Callable, optional): The function to use to load the file. Defaults to read_wsi. A function that accepts a path and returns a numpy array can be supplied for custom loading.
+logfile (str, optional): The path to the log file. Defaults to None.
+terminal_log_level (int, optional): The log level for the terminal. Defaults to logging.DEBUG.
+file_log_level (int, optional): The log level for the log file. Defaults to logging.DEBUG.
+num_threads (int, optional): The number of threads to use. Defaults to 16.</p>
+</dd>
+<dt>Raises:</dt><dd><p>ArrayTypeExcpeiton: Raised when a numpy array is not of type UInt8.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.reinhard.ReinhardWSINormaliser.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_or_array</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#beast.reinhard.ReinhardWSINormaliser.fit" title="Link to this definition">¶</a></dt>
+<dd><p>Function to fit the normalisation to a target whole slide image.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>path_or_array &lt;str, Path, np.ndarray&gt;: Path to the whole slide image to fit to, or the array to fit to.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.reinhard.ReinhardWSINormaliser.load_fit">
+<span class="sig-name descname"><span class="pre">load_fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#beast.reinhard.ReinhardWSINormaliser.load_fit" title="Link to this definition">¶</a></dt>
+<dd><p>Function to load the target normalisation metadata from a JSON file.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>path &lt;str, Path&gt;: Path to load the JSON file from.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.reinhard.ReinhardWSINormaliser.normalise">
+<span class="sig-name descname"><span class="pre">normalise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_or_array</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#beast.reinhard.ReinhardWSINormaliser.normalise" title="Link to this definition">¶</a></dt>
+<dd><p>Function to normalise a whole slide image using the specified normalisation type.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>path_or_array &lt;str, Path, np.ndarray&gt;: Path to the whole slide image to normalise, or the array to normalise.</p>
+</dd>
+<dt>Returns:</dt><dd><p>np.ndarray: Normalised array.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.reinhard.ReinhardWSINormaliser.save_fit">
+<span class="sig-name descname"><span class="pre">save_fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#beast.reinhard.ReinhardWSINormaliser.save_fit" title="Link to this definition">¶</a></dt>
+<dd><p>Function to save the target normalisation metadata to a JSON file.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>path &lt;str, Path&gt;: Path to save the JSON file to.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class" id="module-beast.macenko">
+<dt class="sig sig-object py" id="beast.macenko.MacenkoStainAugmenter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">beast.macenko.</span></span><span class="sig-name descname"><span class="pre">MacenkoStainAugmenter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sigma1=0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma2=0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_loader:</span> <span class="pre">~typing.Callable</span> <span class="pre">=</span> <span class="pre">&lt;function</span> <span class="pre">read_tile&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logfile=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">terminal_log_level=10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_log_level=10</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#beast.macenko.MacenkoStainAugmenter" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseDeconStainAugmenter</span></code></p>
+<p>Class to augment the stain profile and intensity of a tile through Macenko stain vector estimation (<a class="reference external" href="https://www.cs.unc.edu/~mn/sites/default/files/macenko2009.pdf">https://www.cs.unc.edu/~mn/sites/default/files/macenko2009.pdf</a>) and subsequent intensity or compoment matrix perturbation.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>sigma1 (float): The standard deviation of the Gaussian blur applied to the background.
+sigma2 (float): The standard deviation of the Gaussian blur applied to the foreground.
+file_loader (Callable, optional): The function to use to load the tile. Defaults to read_tile. A function that accepts a path and returns a numpy array can be supplied to allow for custom loading.
+logfile (Path, optional): The path to save the log file to. Defaults to None.
+terminal_log_level (int, optional): The log level to print to the terminal. Defaults to logging.DEBUG.
+file_log_level (int, optional): The log level to print to the log file. Defaults to logging.DEBUG.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.macenko.MacenkoStainAugmenter.augment_colour">
+<span class="sig-name descname"><span class="pre">augment_colour</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tile_arr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stain_to_augment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">-1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#beast.macenko.MacenkoStainAugmenter.augment_colour" title="Link to this definition">¶</a></dt>
+<dd><p>Augments the tile stain colour profile.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>tile_arr (np.ndarray): The tile array.</p>
+</dd>
+<dt>Returns:</dt><dd><p>np.ndarray: The converted tile array.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.macenko.MacenkoStainAugmenter.augment_intensity">
+<span class="sig-name descname"><span class="pre">augment_intensity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tile_arr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stain_to_augment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">-1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#beast.macenko.MacenkoStainAugmenter.augment_intensity" title="Link to this definition">¶</a></dt>
+<dd><p>Augments the tile stain intensity.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>tile_arr (np.ndarray): The tile array.
+stain_to_augment (int): (-1,0,1) The stain to augment. If -1, all stains are augmented.</p>
+</dd>
+<dt>Returns:</dt><dd><p>np.ndarray: The converted tile array.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.macenko.MacenkoStainAugmenter.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tile_arr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#beast.macenko.MacenkoStainAugmenter.fit" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieves the stain components for the given tile.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>tile_arr (np.ndarray): The tile array.</p>
+</dd>
+<dt>Returns:</dt><dd><p>dict: The stain matrix.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.macenko.MacenkoStainAugmenter.load_fit">
+<span class="sig-name descname"><span class="pre">load_fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_pth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#beast.macenko.MacenkoStainAugmenter.load_fit" title="Link to this definition">¶</a></dt>
+<dd><p>Loads the target stain metadata from a json file.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>json_pth (Path): The path to load the json file from.</p>
+</dd>
+<dt>Returns:</dt><dd><p>dict: The target stain metadata.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.macenko.MacenkoStainAugmenter.save_fit">
+<span class="sig-name descname"><span class="pre">save_fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_pth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#beast.macenko.MacenkoStainAugmenter.save_fit" title="Link to this definition">¶</a></dt>
+<dd><p>Saves the target stain metadata to a json file.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>json_pth (Path): The path to save the json file to.</p>
+</dd>
+<dt>Returns:</dt><dd><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="beast.macenko.MacenkoTileNormaliser">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">beast.macenko.</span></span><span class="sig-name descname"><span class="pre">MacenkoTileNormaliser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">intensity_sampling_method=IntensitySamplingMethod.PERCENTILE</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensity_percentile:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">95.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_loader:</span> <span class="pre">~typing.Callable</span> <span class="pre">=</span> <span class="pre">&lt;function</span> <span class="pre">read_tile&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logfile=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">terminal_log_level=10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_log_level=10</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#beast.macenko.MacenkoTileNormaliser" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseDeconTileNormaliser</span></code></p>
+<p>Class to transform the stain profle and intensity in a tile to match a target using the Macenko stain vector estimation and normalisation algorithm (<a class="reference external" href="https://www.cs.unc.edu/~mn/sites/default/files/macenko2009.pdf">https://www.cs.unc.edu/~mn/sites/default/files/macenko2009.pdf</a>).</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>intensity_sampling_method (IntensitySamplingMethod, optional): The method to use to sample the intensity of the image. Defaults to IntensitySamplingMethod.PERCENTILE.
+stain_percentile (float, optional): The percentile to use to sample the intensity of the image. Defaults to 95.0.
+file_loader (Callable, optional): The function to use to load the image. Defaults to read_tile. A function that accepts a path and returns a numpy array can be supplied to allow for custom loading.
+logfile (Path, optional): The path to save the log file to. Defaults to None.
+terminal_log_level (int, optional): The log level to print to the terminal. Defaults to logging.DEBUG.
+file_log_level (int, optional): The log level to print to the log file. Defaults to logging.DEBUG.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.macenko.MacenkoTileNormaliser.convert_to_stain1">
+<span class="sig-name descname"><span class="pre">convert_to_stain1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tile_arr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#beast.macenko.MacenkoTileNormaliser.convert_to_stain1" title="Link to this definition">¶</a></dt>
+<dd><p>Converts the tile to only display stain one in RGB.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>tile_arr (np.ndarray): The tile array.
+use_source (bool): Whether to use the source stain matrix or the target stain matrix to render stain 1.</p>
+</dd>
+<dt>Returns:</dt><dd><p>np.ndarray: The converted tile array.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.macenko.MacenkoTileNormaliser.convert_to_stain2">
+<span class="sig-name descname"><span class="pre">convert_to_stain2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tile_arr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#beast.macenko.MacenkoTileNormaliser.convert_to_stain2" title="Link to this definition">¶</a></dt>
+<dd><p>Converts the tile to only display stain two in RGB.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>tile_arr (np.ndarray): The tile array.
+use_source (bool): Whether to use the source stain matrix or the target stain matrix to render stain 2.</p>
+</dd>
+<dt>Returns:</dt><dd><p>np.ndarray: The converted tile array.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.macenko.MacenkoTileNormaliser.convert_to_stain_concentrations">
+<span class="sig-name descname"><span class="pre">convert_to_stain_concentrations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tile_arr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalise_to_target_intensities</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#beast.macenko.MacenkoTileNormaliser.convert_to_stain_concentrations" title="Link to this definition">¶</a></dt>
+<dd><p>Converts the tile to a two channel array of stain concentrations.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>tile_arr (np.ndarray): The tile array.</p>
+</dd>
+<dt>Returns:</dt><dd><p>np.ndarray: The converted tile array.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.macenko.MacenkoTileNormaliser.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_or_array</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#beast.macenko.MacenkoTileNormaliser.fit" title="Link to this definition">¶</a></dt>
+<dd><p>Function to fit the normalisation to a target whole slide image.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>path_or_array &lt;str, Path, np.ndarray&gt;: Path to the whole slide image to fit to, or the array to fit to.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.macenko.MacenkoTileNormaliser.load_fit">
+<span class="sig-name descname"><span class="pre">load_fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_pth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#beast.macenko.MacenkoTileNormaliser.load_fit" title="Link to this definition">¶</a></dt>
+<dd><p>Loads the target stain metadata from a json file.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>json_pth (Path): The path to load the json file from.</p>
+</dd>
+<dt>Returns:</dt><dd><p>dict: The target stain metadata.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.macenko.MacenkoTileNormaliser.normalise">
+<span class="sig-name descname"><span class="pre">normalise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_or_array</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#beast.macenko.MacenkoTileNormaliser.normalise" title="Link to this definition">¶</a></dt>
+<dd><p>Function to normalise a whole slide image using the specified normalisation type.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>path_or_array &lt;str, Path, np.ndarray&gt;: Path to the whole slide image to normalise, or the array to normalise.</p>
+</dd>
+<dt>Returns:</dt><dd><p>np.ndarray: Normalised array.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.macenko.MacenkoTileNormaliser.save_fit">
+<span class="sig-name descname"><span class="pre">save_fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_pth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#beast.macenko.MacenkoTileNormaliser.save_fit" title="Link to this definition">¶</a></dt>
+<dd><p>Saves the target stain metadata to a json file.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>json_pth (Path): The path to save the json file to.</p>
+</dd>
+<dt>Returns:</dt><dd><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="beast.macenko.MacenkoWSINormaliser">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">beast.macenko.</span></span><span class="sig-name descname"><span class="pre">MacenkoWSINormaliser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_threads:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensity_sampling_method=IntensitySamplingMethod.PERCENTILE</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensity_percentile:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">95.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_pixel_samples:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">2000000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_loader:</span> <span class="pre">~typing.Callable</span> <span class="pre">=</span> <span class="pre">&lt;function</span> <span class="pre">read_wsi&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logfile=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">terminal_log_level=10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_log_level=10</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#beast.macenko.MacenkoWSINormaliser" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseDeconWSINormaliser</span></code></p>
+<p>Class to transform the stain profile and intensity in a whole slide image to match a target using the Macenko stain vector estimation and normalisation algorithm (<a class="reference external" href="https://www.cs.unc.edu/~mn/sites/default/files/macenko2009.pdf">https://www.cs.unc.edu/~mn/sites/default/files/macenko2009.pdf</a>). Warning: This class considers the entire slide to have uniform staining, this is useful for visualisation but may not be appropriate for analysis when stain intensity varies across the slide. For analysis, use the MacenkoTileNormaliser or MacenkoWSITesselatedNormaliser class.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>num_threads (int, optional): The number of threads to use. Defaults to 16.
+file_loader (Callable, optional): The function to use to load the image. Defaults to read_wsi. A function that accepts a path and returns a numpy array can be supplied to allow for custom loading.
+logfile (Path, optional): The path to save the log file to. Defaults to None.
+terminal_log_level (int, optional): The log level to print to the terminal. Defaults to logging.DEBUG.
+file_log_level (int, optional): The log level to print to the log file. Defaults to logging.DEBUG.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.macenko.MacenkoWSINormaliser.convert_to_stain1">
+<span class="sig-name descname"><span class="pre">convert_to_stain1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">slide_arr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#beast.macenko.MacenkoWSINormaliser.convert_to_stain1" title="Link to this definition">¶</a></dt>
+<dd><p>Converts the slide to only display stain 1 in RGB.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>slide_arr (np.ndarray): The slide array.
+use_source (bool): Whether to use the source stain matrix or the target stain matrix to render stain 1.</p>
+</dd>
+<dt>Returns:</dt><dd><p>np.ndarray: The converted slide array.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.macenko.MacenkoWSINormaliser.convert_to_stain2">
+<span class="sig-name descname"><span class="pre">convert_to_stain2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">slide_arr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#beast.macenko.MacenkoWSINormaliser.convert_to_stain2" title="Link to this definition">¶</a></dt>
+<dd><p>Converts the slide to only display stain two in RGB.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>slide_arr (np.ndarray): The slide array.
+use_source (bool): Whether to use the source stain matrix or the target stain matrix to render stain 2.</p>
+</dd>
+<dt>Returns:</dt><dd><p>np.ndarray: The converted slide array.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.macenko.MacenkoWSINormaliser.convert_to_stain_concentrations">
+<span class="sig-name descname"><span class="pre">convert_to_stain_concentrations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">slide_arr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#beast.macenko.MacenkoWSINormaliser.convert_to_stain_concentrations" title="Link to this definition">¶</a></dt>
+<dd><p>Converts the slide to a two channel array of stain concentrations.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>slide_arr (np.ndarray): The slide array.</p>
+</dd>
+<dt>Returns:</dt><dd><p>np.ndarray: The converted slide array.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.macenko.MacenkoWSINormaliser.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_or_array</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#beast.macenko.MacenkoWSINormaliser.fit" title="Link to this definition">¶</a></dt>
+<dd><p>Function to fit the normalisation to a target whole slide image.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>path_or_array &lt;str, Path, np.ndarray&gt;: Path to the whole slide image to fit to, or the array to fit to.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.macenko.MacenkoWSINormaliser.load_fit">
+<span class="sig-name descname"><span class="pre">load_fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_pth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#beast.macenko.MacenkoWSINormaliser.load_fit" title="Link to this definition">¶</a></dt>
+<dd><p>Loads the target stain metadata from a json file.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>json_pth (Path): The path to load the json file from.</p>
+</dd>
+<dt>Returns:</dt><dd><p>dict: The target stain metadata.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.macenko.MacenkoWSINormaliser.normalise">
+<span class="sig-name descname"><span class="pre">normalise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_or_array</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#beast.macenko.MacenkoWSINormaliser.normalise" title="Link to this definition">¶</a></dt>
+<dd><p>Function to normalise a whole slide image using the specified normalisation type.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>path_or_array &lt;str, Path, np.ndarray&gt;: Path to the whole slide image to normalise, or the array to normalise.</p>
+</dd>
+<dt>Returns:</dt><dd><p>np.ndarray: Normalised array.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.macenko.MacenkoWSINormaliser.save_fit">
+<span class="sig-name descname"><span class="pre">save_fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_pth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#beast.macenko.MacenkoWSINormaliser.save_fit" title="Link to this definition">¶</a></dt>
+<dd><p>Saves the target stain metadata to a json file.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>json_pth (Path): The path to save the json file to.</p>
+</dd>
+<dt>Returns:</dt><dd><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class" id="module-beast.vahadane">
+<dt class="sig sig-object py" id="beast.vahadane.VahadaneStainAugmenter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">beast.vahadane.</span></span><span class="sig-name descname"><span class="pre">VahadaneStainAugmenter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sigma1=0.4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma2=0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_loader:</span> <span class="pre">~typing.Callable</span> <span class="pre">=</span> <span class="pre">&lt;function</span> <span class="pre">read_tile&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger:</span> <span class="pre">~logging.Logger</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#beast.vahadane.VahadaneStainAugmenter" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseDeconStainAugmenter</span></code></p>
+<p>Class to augment the tissue colour profile of a tile through the Vahadane NMF stain deconvolution algorithm (<a class="reference external" href="https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=7460968">https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=7460968</a>) and subsequent intensity or compoment matrix perturbation.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>sigma1 (float): The standard deviation of the Gaussian blur applied to the background.
+sigma2 (float): The standard deviation of the Gaussian blur applied to the foreground.
+file_loader (Callable): The function to use to load the tile.
+logger (logging.Logger, optional): The logger to use. Defaults to None.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.vahadane.VahadaneStainAugmenter.augment_colour">
+<span class="sig-name descname"><span class="pre">augment_colour</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tile_arr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stain_to_augment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">-1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#beast.vahadane.VahadaneStainAugmenter.augment_colour" title="Link to this definition">¶</a></dt>
+<dd><p>Augments the tile stain colour profile.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>tile_arr (np.ndarray): The tile array.</p>
+</dd>
+<dt>Returns:</dt><dd><p>np.ndarray: The converted tile array.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.vahadane.VahadaneStainAugmenter.augment_intensity">
+<span class="sig-name descname"><span class="pre">augment_intensity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tile_arr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stain_to_augment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">-1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#beast.vahadane.VahadaneStainAugmenter.augment_intensity" title="Link to this definition">¶</a></dt>
+<dd><p>Augments the tile stain intensity.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>tile_arr (np.ndarray): The tile array.
+stain_to_augment (int): (-1,0,1) The stain to augment. If -1, all stains are augmented.</p>
+</dd>
+<dt>Returns:</dt><dd><p>np.ndarray: The converted tile array.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.vahadane.VahadaneStainAugmenter.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tile_arr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#beast.vahadane.VahadaneStainAugmenter.fit" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieves the stain components for the given tile.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>tile_arr (np.ndarray): The tile array.</p>
+</dd>
+<dt>Returns:</dt><dd><p>dict: The stain matrix.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.vahadane.VahadaneStainAugmenter.load_fit">
+<span class="sig-name descname"><span class="pre">load_fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_pth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#beast.vahadane.VahadaneStainAugmenter.load_fit" title="Link to this definition">¶</a></dt>
+<dd><p>Loads the target stain metadata from a json file.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>json_pth (Path): The path to load the json file from.</p>
+</dd>
+<dt>Returns:</dt><dd><p>dict: The target stain metadata.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.vahadane.VahadaneStainAugmenter.save_fit">
+<span class="sig-name descname"><span class="pre">save_fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_pth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#beast.vahadane.VahadaneStainAugmenter.save_fit" title="Link to this definition">¶</a></dt>
+<dd><p>Saves the target stain metadata to a json file.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>json_pth (Path): The path to save the json file to.</p>
+</dd>
+<dt>Returns:</dt><dd><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="beast.vahadane.VahadaneTileNormaliser">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">beast.vahadane.</span></span><span class="sig-name descname"><span class="pre">VahadaneTileNormaliser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">intensity_sampling_method=IntensitySamplingMethod.PERCENTILE</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensity_percentile:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">95.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_loader:</span> <span class="pre">~typing.Callable</span> <span class="pre">=</span> <span class="pre">&lt;function</span> <span class="pre">read_tile&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logfile=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">terminal_log_level=10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_log_level=10</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#beast.vahadane.VahadaneTileNormaliser" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseDeconTileNormaliser</span></code></p>
+<p>Class to transform the stain colour profile and intensity in a tile to match a target using the Vahadane NMF stain deconvolution algorithm (<a class="reference external" href="https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=7460968">https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=7460968</a>).</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>intensity_sampling_method (IntensitySamplingMethod, optional): The method to use to sample the intensity. Defaults to IntensitySamplingMethod.PERCENTILE.
+stain_percentile (float, optional): The maximum percentile of the stain intensity to use. Defaults to 90.0.
+file_loader (Callable, optional): The function to use to load the image. Defaults to read_tile. A function that accepts a path and returns a numpy array can be supplied to allow for custom loading.
+logfile (Path, optional): The path to save the log file to. Defaults to None.
+terminal_log_level (int, optional): The log level to print to the terminal. Defaults to logging.DEBUG.
+file_log_level (int, optional): The log level to print to the log file. Defaults to logging.DEBUG.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.vahadane.VahadaneTileNormaliser.convert_to_stain1">
+<span class="sig-name descname"><span class="pre">convert_to_stain1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tile_arr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#beast.vahadane.VahadaneTileNormaliser.convert_to_stain1" title="Link to this definition">¶</a></dt>
+<dd><p>Converts the tile to only display stain one in RGB.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>tile_arr (np.ndarray): The tile array.
+use_source (bool): Whether to use the source stain matrix or the target stain matrix to render stain 1.</p>
+</dd>
+<dt>Returns:</dt><dd><p>np.ndarray: The converted tile array.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.vahadane.VahadaneTileNormaliser.convert_to_stain2">
+<span class="sig-name descname"><span class="pre">convert_to_stain2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tile_arr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#beast.vahadane.VahadaneTileNormaliser.convert_to_stain2" title="Link to this definition">¶</a></dt>
+<dd><p>Converts the tile to only display stain two in RGB.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>tile_arr (np.ndarray): The tile array.
+use_source (bool): Whether to use the source stain matrix or the target stain matrix to render stain 2.</p>
+</dd>
+<dt>Returns:</dt><dd><p>np.ndarray: The converted tile array.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.vahadane.VahadaneTileNormaliser.convert_to_stain_concentrations">
+<span class="sig-name descname"><span class="pre">convert_to_stain_concentrations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tile_arr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalise_to_target_intensities</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#beast.vahadane.VahadaneTileNormaliser.convert_to_stain_concentrations" title="Link to this definition">¶</a></dt>
+<dd><p>Converts the tile to a two channel array of stain concentrations.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>tile_arr (np.ndarray): The tile array.</p>
+</dd>
+<dt>Returns:</dt><dd><p>np.ndarray: The converted tile array.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.vahadane.VahadaneTileNormaliser.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_or_array</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#beast.vahadane.VahadaneTileNormaliser.fit" title="Link to this definition">¶</a></dt>
+<dd><p>Function to fit the normalisation to a target whole slide image.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>path_or_array &lt;str, Path, np.ndarray&gt;: Path to the whole slide image to fit to, or the array to fit to.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.vahadane.VahadaneTileNormaliser.load_fit">
+<span class="sig-name descname"><span class="pre">load_fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_pth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#beast.vahadane.VahadaneTileNormaliser.load_fit" title="Link to this definition">¶</a></dt>
+<dd><p>Loads the target stain metadata from a json file.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>json_pth (Path): The path to load the json file from.</p>
+</dd>
+<dt>Returns:</dt><dd><p>dict: The target stain metadata.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.vahadane.VahadaneTileNormaliser.normalise">
+<span class="sig-name descname"><span class="pre">normalise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_or_array</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#beast.vahadane.VahadaneTileNormaliser.normalise" title="Link to this definition">¶</a></dt>
+<dd><p>Function to normalise a whole slide image using the specified normalisation type.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>path_or_array &lt;str, Path, np.ndarray&gt;: Path to the whole slide image to normalise, or the array to normalise.</p>
+</dd>
+<dt>Returns:</dt><dd><p>np.ndarray: Normalised array.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.vahadane.VahadaneTileNormaliser.save_fit">
+<span class="sig-name descname"><span class="pre">save_fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_pth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#beast.vahadane.VahadaneTileNormaliser.save_fit" title="Link to this definition">¶</a></dt>
+<dd><p>Saves the target stain metadata to a json file.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>json_pth (Path): The path to save the json file to.</p>
+</dd>
+<dt>Returns:</dt><dd><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="beast.vahadane.VahadaneWSINormaliser">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">beast.vahadane.</span></span><span class="sig-name descname"><span class="pre">VahadaneWSINormaliser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_threads:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensity_sampling_method=IntensitySamplingMethod.PERCENTILE</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensity_percentile:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">95.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_pixel_samples:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">2000000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_loader:</span> <span class="pre">~typing.Callable</span> <span class="pre">=</span> <span class="pre">&lt;function</span> <span class="pre">read_wsi&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logfile=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">terminal_log_level=10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_log_level=10</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#beast.vahadane.VahadaneWSINormaliser" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseDeconWSINormaliser</span></code></p>
+<p>Class to transform the stain intensity in a whole slide image to match a target using the Vahadane NMF stain deconvolution algorithm (<a class="reference external" href="https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=7460968">https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=7460968</a>). Warning: This class considers the entire slide to have uniform staining, this is useful for visualisation but may not be appropriate for analysis when stain intensity varies across the slide. For analysis, use the VahadaneTileNormaliser or VahadaneWSITesselatedNormaliser class.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>num_threads (int, optional): The number of threads to use. Defaults to 16.
+intensity_sampling_method (IntensitySamplingMethod, optional): The method to use to sample the intensity. Defaults to IntensitySamplingMethod.PERCENTILE.
+stain_percentile (float, optional): The maximum percentile of the stain intensity to use. Defaults to 90.0.
+no_pixel_samples (int, optional): The number of pixels to sample. Defaults to 2000000.
+file_loader (Callable, optional): The function to use to load the image. Defaults to read_wsi. A function that accepts a path and returns a numpy array can be supplied to allow for custom loading.
+logfile (Path, optional): The path to save the log file to. Defaults to None.
+terminal_log_level (int, optional): The log level to print to the terminal. Defaults to logging.DEBUG.
+file_log_level (int, optional): The log level to print to the log file. Defaults to logging.DEBUG.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.vahadane.VahadaneWSINormaliser.convert_to_stain1">
+<span class="sig-name descname"><span class="pre">convert_to_stain1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">slide_arr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#beast.vahadane.VahadaneWSINormaliser.convert_to_stain1" title="Link to this definition">¶</a></dt>
+<dd><p>Converts the slide to only display stain 1 in RGB.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>slide_arr (np.ndarray): The slide array.
+use_source (bool): Whether to use the source stain matrix or the target stain matrix to render stain 1.</p>
+</dd>
+<dt>Returns:</dt><dd><p>np.ndarray: The converted slide array.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.vahadane.VahadaneWSINormaliser.convert_to_stain2">
+<span class="sig-name descname"><span class="pre">convert_to_stain2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">slide_arr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#beast.vahadane.VahadaneWSINormaliser.convert_to_stain2" title="Link to this definition">¶</a></dt>
+<dd><p>Converts the slide to only display stain two in RGB.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>slide_arr (np.ndarray): The slide array.
+use_source (bool): Whether to use the source stain matrix or the target stain matrix to render stain 2.</p>
+</dd>
+<dt>Returns:</dt><dd><p>np.ndarray: The converted slide array.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.vahadane.VahadaneWSINormaliser.convert_to_stain_concentrations">
+<span class="sig-name descname"><span class="pre">convert_to_stain_concentrations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">slide_arr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#beast.vahadane.VahadaneWSINormaliser.convert_to_stain_concentrations" title="Link to this definition">¶</a></dt>
+<dd><p>Converts the slide to a two channel array of stain concentrations.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>slide_arr (np.ndarray): The slide array.</p>
+</dd>
+<dt>Returns:</dt><dd><p>np.ndarray: The converted slide array.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.vahadane.VahadaneWSINormaliser.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_or_array</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#beast.vahadane.VahadaneWSINormaliser.fit" title="Link to this definition">¶</a></dt>
+<dd><p>Function to fit the normalisation to a target whole slide image.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>path_or_array &lt;str, Path, np.ndarray&gt;: Path to the whole slide image to fit to, or the array to fit to.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.vahadane.VahadaneWSINormaliser.load_fit">
+<span class="sig-name descname"><span class="pre">load_fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_pth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#beast.vahadane.VahadaneWSINormaliser.load_fit" title="Link to this definition">¶</a></dt>
+<dd><p>Loads the target stain metadata from a json file.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>json_pth (Path): The path to load the json file from.</p>
+</dd>
+<dt>Returns:</dt><dd><p>dict: The target stain metadata.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.vahadane.VahadaneWSINormaliser.normalise">
+<span class="sig-name descname"><span class="pre">normalise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_or_array</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#beast.vahadane.VahadaneWSINormaliser.normalise" title="Link to this definition">¶</a></dt>
+<dd><p>Function to normalise a whole slide image using the specified normalisation type.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>path_or_array &lt;str, Path, np.ndarray&gt;: Path to the whole slide image to normalise, or the array to normalise.</p>
+</dd>
+<dt>Returns:</dt><dd><p>np.ndarray: Normalised array.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.vahadane.VahadaneWSINormaliser.save_fit">
+<span class="sig-name descname"><span class="pre">save_fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_pth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#beast.vahadane.VahadaneWSINormaliser.save_fit" title="Link to this definition">¶</a></dt>
+<dd><p>Saves the target stain metadata to a json file.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>json_pth (Path): The path to save the json file to.</p>
+</dd>
+<dt>Returns:</dt><dd><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-beast.file_readers">
+<span id="file-reading-and-writing"></span><h2>File Reading and Writing<a class="headerlink" href="#module-beast.file_readers" title="Link to this heading">¶</a></h2>
+<dl class="py exception">
+<dt class="sig sig-object py" id="beast.file_readers.SlideReadException">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">beast.file_readers.</span></span><span class="sig-name descname"><span class="pre">SlideReadException</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Could</span> <span class="pre">not</span> <span class="pre">read</span> <span class="pre">slide.'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#beast.file_readers.SlideReadException" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="beast.file_readers.SlideReadException.args">
+<span class="sig-name descname"><span class="pre">args</span></span><a class="headerlink" href="#beast.file_readers.SlideReadException.args" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.file_readers.SlideReadException.with_traceback">
+<span class="sig-name descname"><span class="pre">with_traceback</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#beast.file_readers.SlideReadException.with_traceback" title="Link to this definition">¶</a></dt>
+<dd><p>Exception.with_traceback(tb) –
+set self.__traceback__ to tb and return self.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="beast.file_readers.TileReadException">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">beast.file_readers.</span></span><span class="sig-name descname"><span class="pre">TileReadException</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Could</span> <span class="pre">not</span> <span class="pre">read</span> <span class="pre">tile.'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#beast.file_readers.TileReadException" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="beast.file_readers.TileReadException.args">
+<span class="sig-name descname"><span class="pre">args</span></span><a class="headerlink" href="#beast.file_readers.TileReadException.args" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.file_readers.TileReadException.with_traceback">
+<span class="sig-name descname"><span class="pre">with_traceback</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#beast.file_readers.TileReadException.with_traceback" title="Link to this definition">¶</a></dt>
+<dd><p>Exception.with_traceback(tb) –
+set self.__traceback__ to tb and return self.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="beast.file_readers.read_tile">
+<span class="sig-prename descclassname"><span class="pre">beast.file_readers.</span></span><span class="sig-name descname"><span class="pre">read_tile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tile_pth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#beast.file_readers.read_tile" title="Link to this definition">¶</a></dt>
+<dd><p>Read a tile image and return a numpy array.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>tile_pth: Path to the tile image.</p>
+</dd>
+<dt>Returns:</dt><dd><p>Numpy array of the tile image.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="beast.file_readers.read_wsi">
+<span class="sig-prename descclassname"><span class="pre">beast.file_readers.</span></span><span class="sig-name descname"><span class="pre">read_wsi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">slide_pth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#beast.file_readers.read_wsi" title="Link to this definition">¶</a></dt>
+<dd><p>Read a whole slide image and return a numpy array.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>slide_pth: Path to the whole slide image.</p>
+</dd>
+<dt>Returns:</dt><dd><p>Numpy array of the whole slide image.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function" id="module-beast.file_writers">
+<dt class="sig sig-object py" id="beast.file_writers.get_mpp">
+<span class="sig-prename descclassname"><span class="pre">beast.file_writers.</span></span><span class="sig-name descname"><span class="pre">get_mpp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">slide_pth</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#beast.file_writers.get_mpp" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="beast.file_writers.write_ome_tiff">
+<span class="sig-prename descclassname"><span class="pre">beast.file_writers.</span></span><span class="sig-name descname"><span class="pre">write_ome_tiff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">slide_arr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mppx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mppy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression_arg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'jpeg'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">levels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level_zero_uncompressed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#beast.file_writers.write_ome_tiff" title="Link to this definition">¶</a></dt>
+<dd><p>Write a whole slide image to a OME-TIFF file.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>slide_arr &lt;np.ndarray&gt;: Numpy array of the whole slide image.
+mppx &lt;float&gt;: Microns per pixel in the x direction.
+mppy &lt;float&gt;: Microns per pixel in the y direction.
+compression_arg &lt;str&gt;: Compression to use for the OME-TIFF file.
+levels &lt;int&gt;: Number of levels to write to the OME-TIFF file.
+level_zero_uncompressed &lt;bool&gt;: Whether to write level zero uncompressed.</p>
+</dd>
+<dt>Returns:</dt><dd><p>None</p>
+</dd>
+<dt>Raises:</dt><dd><p>None</p>
+</dd>
+</dl>
+<p>Notes:</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="beast.file_writers.write_tile">
+<span class="sig-prename descclassname"><span class="pre">beast.file_writers.</span></span><span class="sig-name descname"><span class="pre">write_tile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tile_arr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#beast.file_writers.write_tile" title="Link to this definition">¶</a></dt>
+<dd><p>Write a tile to a file.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>tile_arr &lt;np.ndarray&gt;: Numpy array of the tile.
+output_path &lt;Path&gt;: Path to write the tile to.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-beast.tools">
+<span id="tools-and-utilities"></span><h2>Tools and Utilities<a class="headerlink" href="#module-beast.tools" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="beast.tools.ParallelTileNormaliser">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">beast.tools.</span></span><span class="sig-name descname"><span class="pre">ParallelTileNormaliser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">normalistion_class:</span> <span class="pre">~beast.reinhard.ReinhardTileNormaliser</span> <span class="pre">|</span> <span class="pre">~beast.macenko.MacenkoTileNormaliser</span> <span class="pre">|</span> <span class="pre">~beast.vahadane.VahadaneTileNormaliser</span> <span class="pre">=</span> <span class="pre">&lt;class</span> <span class="pre">'beast.macenko.MacenkoTileNormaliser'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">discard_background:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">background_threshold:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">0.9</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#beast.tools.ParallelTileNormaliser" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class to normalise a collection of tiles in parallel.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>normalistion_class: The normalisation class to use. Must be one of ReinhardTileNormaliser, MacenkoTileNormaliser, VahadaneTileNormaliser
+num_threads (int): The number of threads to use for parallel processing. (Default: 8)
+<a href="#id1"><span class="problematic" id="id2">**</span></a>kwargs: The keyword arguments to pass to the normalisation class. See the documentation for the normalisation class for more information.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.tools.ParallelTileNormaliser.load_fit">
+<span class="sig-name descname"><span class="pre">load_fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#beast.tools.ParallelTileNormaliser.load_fit" title="Link to this definition">¶</a></dt>
+<dd><p>Loads the target stain metadata from a json file.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>json_pth (Path): The path to load the json file from.</p>
+</dd>
+<dt>Returns:</dt><dd><p>dict: The target stain metadata.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.tools.ParallelTileNormaliser.normalise">
+<span class="sig-name descname"><span class="pre">normalise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">targets</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#beast.tools.ParallelTileNormaliser.normalise" title="Link to this definition">¶</a></dt>
+<dd><p>Normalises a collection of tiles.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>targets (List[Path]): The list of paths to the tiles to normalise.
+output (List[Path] | Path): The list of paths to save the normalised tiles to. If a single path to a directory is provided, the tiles will be saved in that directory.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="beast.tools.StainMetadataEstimator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">beast.tools.</span></span><span class="sig-name descname"><span class="pre">StainMetadataEstimator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">normalistion_class:</span> <span class="pre">~beast.reinhard.ReinhardTileNormaliser</span> <span class="pre">|</span> <span class="pre">~beast.macenko.MacenkoTileNormaliser</span> <span class="pre">|</span> <span class="pre">~beast.vahadane.VahadaneTileNormaliser</span> <span class="pre">|</span> <span class="pre">~beast.reinhard.ReinhardWSINormaliser</span> <span class="pre">|</span> <span class="pre">~beast.macenko.MacenkoWSINormaliser</span> <span class="pre">|</span> <span class="pre">~beast.vahadane.VahadaneWSINormaliser</span> <span class="pre">=</span> <span class="pre">&lt;class</span> <span class="pre">'beast.macenko.MacenkoTileNormaliser'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aggregation_method:</span> <span class="pre">~beast.utils.AggregationMethod</span> <span class="pre">=</span> <span class="pre">AggregationMethod.MEDIAN</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aggregation_percentile:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">0.75</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">discard_background:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">background_threshold:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">0.9</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#beast.tools.StainMetadataEstimator" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class to estimate the stain metadata from a single tile or WSI or a list of them.</p>
+<p>If a list of sources is provided, the stain matrix aggregation method can be set to one of “mean”, “median”, “max”, “min” or “percentile”.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>normalistion_class: The normalisation class to use. Must be one of ReinhardTileNormaliser, MacenkoTileNormaliser, VahadaneTileNormaliser, ReinhardWSINormaliser, MacenkoWSINormaliser, VahadaneWSINormaliser
+aggregation_method (AggregationMethod): The method to use to aggregate the stain metadata from a list of sources. (Default: AggregationMethod.MEDIAN)
+percentile (float): The percentile to use when aggregating the stain metadata. Only used when aggregation_method=AggregationMethod.PERCENTILE
+<a href="#id3"><span class="problematic" id="id4">**</span></a>kwargs: Additional keyword arguments to pass to the normalisation class. See the documentation for the normalisation class for more details.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.tools.StainMetadataEstimator.estimate">
+<span class="sig-name descname"><span class="pre">estimate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#beast.tools.StainMetadataEstimator.estimate" title="Link to this definition">¶</a></dt>
+<dd><p>Estimates the stain metadata from a single tile or WSI or a list of them.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>target (List[Path] | Path): The path to the tile or WSI or a list of them.</p>
+</dd>
+<dt>Returns:</dt><dd><p>dict: The estimated stain metadata.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.tools.StainMetadataEstimator.save_fit">
+<span class="sig-name descname"><span class="pre">save_fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#beast.tools.StainMetadataEstimator.save_fit" title="Link to this definition">¶</a></dt>
+<dd><p>Saves the target stain metadata to a json file.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>json_path (Path): The path to save the json file to.</p>
+</dd>
+<dt>Returns:</dt><dd><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="beast.tools.TesselatedWSINormaliser">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">beast.tools.</span></span><span class="sig-name descname"><span class="pre">TesselatedWSINormaliser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">normalistion_class:</span> <span class="pre">~beast.reinhard.ReinhardTileNormaliser</span> <span class="pre">|</span> <span class="pre">~beast.macenko.MacenkoTileNormaliser</span> <span class="pre">|</span> <span class="pre">~beast.vahadane.VahadaneTileNormaliser</span> <span class="pre">=</span> <span class="pre">&lt;class</span> <span class="pre">'beast.macenko.MacenkoTileNormaliser'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">discard_background:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">background_threshold:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">0.9</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">discard_non_conforming:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tile_ext='png'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#beast.tools.TesselatedWSINormaliser" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class to normalise a WSI through tesselation and normalisation of the individual tiles.</p>
+<p>The tiles will then be written out to form a dataset of normalised tiles optionally the whole WSI can be reconstructed and returned.</p>
+<p>Background tiles can be discarded by setting the discard_background to “threshold”.</p>
+<p>The background_threshold parameter determines the percentage of background pixels present in the tile for the tile to be discarded.</p>
+<p>Tiles will be written out in the format ystart_xstart_yend_xend.png</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>normalistion_class: The normalisation class to use. Must be one of ReinhardTileNormaliser, MacenkoTileNormaliser, VahadaneTileNormaliser
+discard_background: The method to use to discard background. Must be one of None, “threshold”
+background_threshold (float): The percentage of pixels in a tile that must be background for the tile to be discarded. Only used when discard_background=”otsu”
+discard_non_conforming (bool): Whether to discard tiles that do not conform to the target tile size. (Default: True)
+num_threads (int): The number of threads to use when tesselating and normalising the WSI.
+tile_ext (str): The extension to use for the tiles. (Default: “.png”)
+<a href="#id5"><span class="problematic" id="id6">**</span></a>kwargs: Additional keyword arguments to pass to the normalisation class. See the documentation for the normalisation class for more details.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.tools.TesselatedWSINormaliser.load_fit">
+<span class="sig-name descname"><span class="pre">load_fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#beast.tools.TesselatedWSINormaliser.load_fit" title="Link to this definition">¶</a></dt>
+<dd><p>Loads the target stain metadata from a json file.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>json_pth (Path): The path to load the json file from.</p>
+</dd>
+<dt>Returns:</dt><dd><p>dict: The target stain metadata.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.tools.TesselatedWSINormaliser.normalise">
+<span class="sig-name descname"><span class="pre">normalise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">slide_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tile_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(224,</span> <span class="pre">224)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_slide</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#beast.tools.TesselatedWSINormaliser.normalise" title="Link to this definition">¶</a></dt>
+<dd><p>Tesselates a WSI and normalises each tile.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>slide_path (Path): The path to the WSI to normalise.
+output_dir (Path): The directory to write the normalised tiles to.
+tile_size (tuple): The size of the tiles to extract from the WSI.
+return_slide (bool): Whether to return the normalised slide. (Default: False)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class" id="module-beast.utils">
+<dt class="sig sig-object py" id="beast.utils.AggregationMethod">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">beast.utils.</span></span><span class="sig-name descname"><span class="pre">AggregationMethod</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#beast.utils.AggregationMethod" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>Enum to define the method to use when aggregating the stain metadata from a list of sources.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="beast.utils.AggregationMethod.MAX">
+<span class="sig-name descname"><span class="pre">MAX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#beast.utils.AggregationMethod.MAX" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="beast.utils.AggregationMethod.MEAN">
+<span class="sig-name descname"><span class="pre">MEAN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#beast.utils.AggregationMethod.MEAN" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="beast.utils.AggregationMethod.MEDIAN">
+<span class="sig-name descname"><span class="pre">MEDIAN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#beast.utils.AggregationMethod.MEDIAN" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="beast.utils.AggregationMethod.MIN">
+<span class="sig-name descname"><span class="pre">MIN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#beast.utils.AggregationMethod.MIN" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="beast.utils.AggregationMethod.PERCENTILE">
+<span class="sig-name descname"><span class="pre">PERCENTILE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#beast.utils.AggregationMethod.PERCENTILE" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="beast.utils.IntensitySamplingMethod">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">beast.utils.</span></span><span class="sig-name descname"><span class="pre">IntensitySamplingMethod</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#beast.utils.IntensitySamplingMethod" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>Enum to specify the method to use to sample the stain intensity.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="beast.utils.IntensitySamplingMethod.MAX">
+<span class="sig-name descname"><span class="pre">MAX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#beast.utils.IntensitySamplingMethod.MAX" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="beast.utils.IntensitySamplingMethod.MEAN">
+<span class="sig-name descname"><span class="pre">MEAN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#beast.utils.IntensitySamplingMethod.MEAN" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="beast.utils.IntensitySamplingMethod.MEDIAN">
+<span class="sig-name descname"><span class="pre">MEDIAN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#beast.utils.IntensitySamplingMethod.MEDIAN" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="beast.utils.IntensitySamplingMethod.MIN">
+<span class="sig-name descname"><span class="pre">MIN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#beast.utils.IntensitySamplingMethod.MIN" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="beast.utils.IntensitySamplingMethod.PERCENTILE">
+<span class="sig-name descname"><span class="pre">PERCENTILE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5</span></em><a class="headerlink" href="#beast.utils.IntensitySamplingMethod.PERCENTILE" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="beast.utils.TileCoordinate">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">beast.utils.</span></span><span class="sig-name descname"><span class="pre">TileCoordinate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xstart</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ystart</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xend</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yend</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#beast.utils.TileCoordinate" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">NamedTuple</span></code></p>
+<p>NamedTuple for tile coordinates.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.utils.TileCoordinate.count">
+<span class="sig-name descname"><span class="pre">count</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#beast.utils.TileCoordinate.count" title="Link to this definition">¶</a></dt>
+<dd><p>Return number of occurrences of value.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.utils.TileCoordinate.index">
+<span class="sig-name descname"><span class="pre">index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">9223372036854775807</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#beast.utils.TileCoordinate.index" title="Link to this definition">¶</a></dt>
+<dd><p>Return first index of value.</p>
+<p>Raises ValueError if the value is not present.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="beast.utils.TileCoordinate.xend">
+<span class="sig-name descname"><span class="pre">xend</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#beast.utils.TileCoordinate.xend" title="Link to this definition">¶</a></dt>
+<dd><p>Alias for field number 2</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="beast.utils.TileCoordinate.xstart">
+<span class="sig-name descname"><span class="pre">xstart</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#beast.utils.TileCoordinate.xstart" title="Link to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="beast.utils.TileCoordinate.yend">
+<span class="sig-name descname"><span class="pre">yend</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#beast.utils.TileCoordinate.yend" title="Link to this definition">¶</a></dt>
+<dd><p>Alias for field number 3</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="beast.utils.TileCoordinate.ystart">
+<span class="sig-name descname"><span class="pre">ystart</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#beast.utils.TileCoordinate.ystart" title="Link to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="beast.utils.TileDimensions">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">beast.utils.</span></span><span class="sig-name descname"><span class="pre">TileDimensions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#beast.utils.TileDimensions" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">NamedTuple</span></code></p>
+<p>NamedTuple for tile dimensions.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.utils.TileDimensions.count">
+<span class="sig-name descname"><span class="pre">count</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#beast.utils.TileDimensions.count" title="Link to this definition">¶</a></dt>
+<dd><p>Return number of occurrences of value.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="beast.utils.TileDimensions.index">
+<span class="sig-name descname"><span class="pre">index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">9223372036854775807</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#beast.utils.TileDimensions.index" title="Link to this definition">¶</a></dt>
+<dd><p>Return first index of value.</p>
+<p>Raises ValueError if the value is not present.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="beast.utils.TileDimensions.x">
+<span class="sig-name descname"><span class="pre">x</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#beast.utils.TileDimensions.x" title="Link to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="beast.utils.TileDimensions.y">
+<span class="sig-name descname"><span class="pre">y</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#beast.utils.TileDimensions.y" title="Link to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="beast.utils.generate_tile_coordinates">
+<span class="sig-prename descclassname"><span class="pre">beast.utils.</span></span><span class="sig-name descname"><span class="pre">generate_tile_coordinates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dimensions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tile_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(5000,</span> <span class="pre">5000)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xstart</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ystart</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#beast.utils.TileCoordinate" title="beast.utils.TileCoordinate"><span class="pre">TileCoordinate</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#beast.utils.generate_tile_coordinates" title="Link to this definition">¶</a></dt>
+<dd><p>Generate a list of tile coordinates for a given slide dimensions and patch size.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>dimensions &lt;Tuple&gt;: Tuple of the slide dimensions (x,y).
+patch_size &lt;Tuple&gt;: Tuple of the tile size (x,y).
+xstart &lt;Integer&gt;: Starting x coordinate.
+ystart &lt;Integer&gt;: Starting y coordinate.</p>
+</dd>
+<dt>Returns:</dt><dd><p>List of tile coordinates &lt;TileCoordinate&gt;.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="beast.utils.get_background_mask">
+<span class="sig-prename descclassname"><span class="pre">beast.utils.</span></span><span class="sig-name descname"><span class="pre">get_background_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tile_arr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">luminosity_threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">convert_to_lab</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#beast.utils.get_background_mask" title="Link to this definition">¶</a></dt>
+<dd><p>Generate a background mask for a given tile.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>tile_arr &lt;np.ndarray&gt;: Tile array.
+luminosity_threshold &lt;Float&gt;: Luminosity threshold.</p>
+</dd>
+<dt>Returns:</dt><dd><p>Tissue mask &lt;np.ndarray&gt;.</p>
+</dd>
+<dt>Notes:</dt><dd><ul class="simple">
+<li><p>Luminosity threshold is a value between 0 and 1.</p></li>
+<li><p>Background mask is a binary mask with 0 for tissue and 1 for background.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="beast.utils.get_otsu_tissue_mask">
+<span class="sig-prename descclassname"><span class="pre">beast.utils.</span></span><span class="sig-name descname"><span class="pre">get_otsu_tissue_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tile_arr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">convert_to_lab</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#beast.utils.get_otsu_tissue_mask" title="Link to this definition">¶</a></dt>
+<dd><p>Generate a tissue mask for a given tile using Otsu’s method.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>tile_arr &lt;np.ndarray&gt;: Tile array.</p>
+</dd>
+<dt>Returns:</dt><dd><p>Tissue mask &lt;np.ndarray&gt;.</p>
+</dd>
+<dt>Notes:</dt><dd><ul class="simple">
+<li><p>Tissue mask is a binary mask with 0 for tissue and 1 for background.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="beast.utils.get_tissue_mask">
+<span class="sig-prename descclassname"><span class="pre">beast.utils.</span></span><span class="sig-name descname"><span class="pre">get_tissue_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tile_arr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">luminosity_threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">convert_to_lab</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#beast.utils.get_tissue_mask" title="Link to this definition">¶</a></dt>
+<dd><p>Generate a tissue mask for a given tile.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>tile_arr &lt;np.ndarray&gt;: Tile array.
+luminosity_threshold &lt;Float&gt;: Luminosity threshold.</p>
+</dd>
+<dt>Returns:</dt><dd><p>Tissue mask &lt;np.ndarray&gt;.</p>
+</dd>
+<dt>Notes:</dt><dd><ul class="simple">
+<li><p>Luminosity threshold is a value between 0 and 1.</p></li>
+<li><p>Tissue mask is a binary mask with 0 for tissue and 1 for background.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="beast.utils.lab_luminosity_standardiser">
+<span class="sig-prename descclassname"><span class="pre">beast.utils.</span></span><span class="sig-name descname"><span class="pre">lab_luminosity_standardiser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lab_arr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">percentile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">98</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#beast.utils.lab_luminosity_standardiser" title="Link to this definition">¶</a></dt>
+<dd><p>Standardise the luminosity of an LAB image.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>lab_arr &lt;np.ndarray&gt;: LAB image.</p>
+</dd>
+<dt>Returns:</dt><dd><p>Standardised LAB image &lt;np.ndarray&gt;.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="beast.utils.rgb_luminosity_standardiser">
+<span class="sig-prename descclassname"><span class="pre">beast.utils.</span></span><span class="sig-name descname"><span class="pre">rgb_luminosity_standardiser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rgb</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">percentile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">98</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#beast.utils.rgb_luminosity_standardiser" title="Link to this definition">¶</a></dt>
+<dd><p>Standardise the luminosity of an RGB image.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>rgb &lt;np.ndarray&gt;: RGB image.</p>
+</dd>
+<dt>Returns:</dt><dd><p>Standardised RGB image &lt;np.ndarray&gt;.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">BEAST - Beatson Augmentation and Stain Normalisation Toolkit</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#normalisation-and-augmentation">Normalisation and Augmentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-beast.file_readers">File Reading and Writing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-beast.tools">Tools and Utilities</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to the Beatson Augmentation and Stain Normalisation Toolkit’s documentation.</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2024, Cancer Research UK Scotland Institute.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.2.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="_sources/api.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
